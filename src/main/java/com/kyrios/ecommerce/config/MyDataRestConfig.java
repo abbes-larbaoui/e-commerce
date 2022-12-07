@@ -16,7 +16,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
 
         cors.addMapping("/**")
-                .allowedOrigins("*");
+                .allowedOrigins("http://localhost:4200");
 
         config.getExposureConfiguration()
                 .forDomainType(Product.class)
