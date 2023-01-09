@@ -1,9 +1,12 @@
 package com.kyrios.ecommerce.config;
 
+import com.kyrios.ecommerce.entity.Country;
 import com.kyrios.ecommerce.entity.Product;
 import com.kyrios.ecommerce.entity.ProductCategory;
+import com.kyrios.ecommerce.entity.State;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.core.mapping.ExposureConfigurer;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -31,17 +34,25 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         cors.addMapping("/**")
                 .allowedOrigins("http://localhost:4200");
 
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(Product.class), theUnsupportedActions);
 
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(ProductCategory.class), theUnsupportedActions);
+
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(Country.class), theUnsupportedActions);
+
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(State.class), theUnsupportedActions);
 
         exposeIds(config);
+    }
+
+    private static void disableHttpMethods(ExposureConfigurer config, HttpMethod[] theUnsupportedActions) {
+        config
+                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
     }
 
     private void exposeIds(RepositoryRestConfiguration config) {
